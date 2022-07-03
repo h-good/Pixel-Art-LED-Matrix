@@ -18,15 +18,21 @@ options.gpio_slowdown = 4
 options.hardware_mapping = 'adafruit-hat'  # If you have an Adafruit HAT: 'adafruit-hat'
 
 matrix = RGBMatrix(options = options)
+while(1):
+    try:
+        I_str = random.choice(os.listdir("/home/pi/Documents/Python/pixel_art_pics"))
+        I = Image.open("/home/pi/Documents/Python/pixel_art_pics/" +I_str)
 
-I = Image.open("C19.JPG")
-newSize = [32, 64]
-I = I.resize(newSize)
-pix = I.load()
-for i in range(64):
-    for j in range(32):
-        matrix.SetPixel(i,j,pix[j,i][0],pix[j,i][1],pix[j,i][2])
+        newSize = [32, 64]
+        I = I.resize(newSize)
+        pix = I.load()
+        for i in range(64):
+            for j in range(32):
+                matrix.SetPixel(i,j,pix[j,i][0],pix[j,i][1],pix[j,i][2])
+        time.sleep(4)
 
+    except KeyboardInterrupt:
+        sys.exit(0)
 # matrix.SetPixel()
                         
 # I.thumbnail((matrix.width, matrix.height))
@@ -41,12 +47,7 @@ for i in range(64):
 # matrix.SetImage(I.convert('RGB'))
 
 
-try:
-    print("Press CTRL-C to stop.")
-    while True:
-        time.sleep(100)
-except KeyboardInterrupt:
-    sys.exit(0)
+
 
 #                             
 #         I = Image.open("/home/pi/Documents/Python/pixel_art_pics/" +I_str)
