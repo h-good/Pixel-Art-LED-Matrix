@@ -1,4 +1,5 @@
 from PIL import Image
+import sys
 #import numpy as np
 #import board
 #import neopixel
@@ -12,12 +13,14 @@ import random
 options = RGBMatrixOptions()
 options.rows = 32
 options.cols = 64
-options.gpio_slowdown = 4
+options.gpio_slowdown = 5
 # options.chain_length = 1
 # options.parallel = 1
 options.hardware_mapping = 'adafruit-hat'  # If you have an Adafruit HAT: 'adafruit-hat'
 
 matrix = RGBMatrix(options = options)
+# Set the threshold value 0-255, to remove very faint pixels 
+threshold = 20
 while(1):
     try:
         I_str = random.choice(os.listdir("/home/pi/Documents/Python/pixel_art_pics"))
@@ -25,11 +28,18 @@ while(1):
 
         newSize = [32, 64]
         I = I.resize(newSize)
+        # gray scale threshold the image
+        Igray = I.point(lambda p: p > threshold and 255) 
         pix = I.load()
+        pix_gray = Igray.load()
         for i in range(64):
             for j in range(32):
-                matrix.SetPixel(i,j,pix[j,i][0],pix[j,i][1],pix[j,i][2])
-        time.sleep(4)
+                #if pixel in threshold image is black, write pixel to black
+                if pix_gray[j,i][0] == 0 and pix_gray[j,i][1] == 0 and pix_gray[j,i][2] == 0:
+                    matrix.SetPixel(i,j,0,0,0)
+                else:
+                    matrix.SetPixel(i,j,pix[j,i][0],pix[j,i][1],pix[j,i][2])
+        time.sleep(3)
 
     except KeyboardInterrupt:
         sys.exit(0)
