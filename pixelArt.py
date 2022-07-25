@@ -1,6 +1,6 @@
 from PIL import Image
 import sys
-#import numpy as np
+import numpy as np
 #import board
 #import neopixel
 #from PIL import ImageDraw
@@ -17,15 +17,35 @@ options.gpio_slowdown = 5
 # options.chain_length = 1
 # options.parallel = 1
 options.hardware_mapping = 'adafruit-hat'  # If you have an Adafruit HAT: 'adafruit-hat'
-
 matrix = RGBMatrix(options = options)
+
 # Set the threshold value 0-255, to remove very faint pixels 
 threshold = 20
+
+# List and counter to reduce dupilcate image shows
+I_str_list = ['','','','','','','','','','']
+ele_ctn = 0
+
 while(1):
     try:
-        I_str = random.choice(os.listdir("/home/pi/Documents/Python/pixel_art_pics"))
+        #Ensure next image has not been seen for last 10 shows
+        new_I = 0
+        while not new_I:
+            #Get a random file
+            I_str = random.choice(os.listdir("/home/pi/Documents/Python/pixel_art_pics"))
+            #Check if file has appeared in the last ten image iterations, if found a new random file will be chosen
+            for s in I_str_list:
+                if I_str != s:
+                    new_I = 1
+        #Add current file name to list of shown files
+        I_str_list[ele_ctn] = I_str
+        if ele_ctn != 9:
+            ele_ctn = ele_ctn + 1
+        else:
+            ele_ctn = 0
+        #Open file
         I = Image.open("/home/pi/Documents/Python/pixel_art_pics/" +I_str)
-
+        #resize image
         newSize = [32, 64]
         I = I.resize(newSize)
         # gray scale threshold the image
@@ -39,7 +59,7 @@ while(1):
                     matrix.SetPixel(i,j,0,0,0)
                 else:
                     matrix.SetPixel(i,j,pix[j,i][0],pix[j,i][1],pix[j,i][2])
-        time.sleep(3)
+        time.sleep(10)
 
     except KeyboardInterrupt:
         sys.exit(0)
