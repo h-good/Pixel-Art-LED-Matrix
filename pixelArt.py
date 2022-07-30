@@ -39,11 +39,9 @@ while(1):
             for s in I_str_list:
                 if I_str == s:
                     new_I = 0 
-                    print(I_str + " is repeat")
         #Add current file name to list of shown files
         I_str_list[ele_ctn] = I_str
         print(I_str_list)
-        print("------------------------")
         if ele_ctn != 9:
             ele_ctn = ele_ctn + 1
         else:
