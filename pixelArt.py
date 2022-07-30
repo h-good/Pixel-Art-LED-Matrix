@@ -41,7 +41,6 @@ while(1):
                     new_I = 0 
         #Add current file name to list of shown files
         I_str_list[ele_ctn] = I_str
-        print(I_str_list)
         if ele_ctn != 9:
             ele_ctn = ele_ctn + 1
         else:
