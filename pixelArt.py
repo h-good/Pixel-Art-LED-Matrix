@@ -30,13 +30,15 @@ while(1):
     try:
         #Ensure next image has not been seen for last 10 shows
         new_I = 0
+        
         while not new_I:
             #Get a random file
             I_str = random.choice(os.listdir("/home/pi/Documents/Python/pixel_art_pics"))
             #Check if file has appeared in the last ten image iterations, if found a new random file will be chosen
+            new_I = 1
             for s in I_str_list:
-                if I_str != s:
-                    new_I = 1
+                if I_str == s:
+                    new_I = 0 
         #Add current file name to list of shown files
         I_str_list[ele_ctn] = I_str
         if ele_ctn != 9:
